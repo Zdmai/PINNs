@@ -60,6 +60,7 @@ def train(model, train_loader, valid_loader, config, device):
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.003, momentum=0.8)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'], weight_decay=1e-5)
+    lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.90)
     
     writer = SummaryWriter() # Writer of tensorboard.
     if not os.path.isdir('./models'):
@@ -94,6 +95,7 @@ def train(model, train_loader, valid_loader, config, device):
         mean_train_loss = sum(loss_record)/len(loss_record)
 
         writer.add_scalar('Loss/train', mean_train_loss, step)
+        lr_scheduler.step()
 
 
 
