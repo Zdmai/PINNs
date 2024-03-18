@@ -61,7 +61,7 @@ class ImageDataset(Dataset):
         folders = os.listdir(root)
         folders.sort() # sort by alphabet
         # print("[dataset] class number:", len(folders))
-        eye = np.eye(len(folders))
+        eye = np.eye(len(folders), dtype=np.float32)
         for class_id, folder in enumerate(folders):
             files = os.listdir(root+folder)
             class_files = root + folder

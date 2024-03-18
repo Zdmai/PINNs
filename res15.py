@@ -33,10 +33,11 @@ class EPNet(nn.Module):
         super(EPNet, self).__init__()
         shape = config['input_shape']
         input_channel = config['input_channels']
-        self.conv = nn.Conv2d(input_channel, 32, 5, padding='same')
-        self.stage1 = BasicBlock(32, 64)
-        self.stage2 = BasicBlock(64, 128)
-        self.stage3 = BasicBlock(128, 128)
+        self.conv = nn.Conv2d(input_channel, 4, 5, padding='same')
+        self.stage1 = BasicBlock(4, 8)
+        self.stage2 = BasicBlock(8, 24)
+        self.stage3 = BasicBlock(24, 64)
+        self.stage4 = BasicBlock(64, 128)
         with torch.no_grad():
             self.feature = self._forward_test(torch.zeros(shape)).view(-1).shape[0]
         
@@ -51,6 +52,7 @@ class EPNet(nn.Module):
         x = self.stage1(x)
         x = self.stage2(x)
         x = self.stage3(x)
+        x = self.stage4(x)
         x = F.adaptive_avg_pool2d(x, output_size=1)
         # print("average pool:", x.shape)
         return x
