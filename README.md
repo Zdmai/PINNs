@@ -12,6 +12,10 @@ first download the dataset and unzip it to `test*` dir and then modify the `data
 python train.py
 ```
 
+#### ROC Curve
+
+![](./test1/img/test1_roc_curve.png)
+
 ### Test V.
 
 > Note!
