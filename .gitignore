@@ -1,3 +1,4 @@
 **/.DS_Store
-dataset
-__pycache__
+task1/dataset
+task1/__pycache__
+task2/dataset
