@@ -1,22 +1,25 @@
 import os
+
 import numpy as np
 import torch
-import numpy as np
-
 from torch.utils.data import Dataset
+from torchvision.transforms import transforms
 
 # Dataset
 
+
 class ImageDataset(Dataset):
 
-    def __init__(self, 
-                 root: str,
-                 # istrain: bool,
-                 # data_size: int,
-                 return_index: bool = False):
+    def __init__(
+        self,
+        root: str,
+        # istrain: bool,
+        # data_size: int,
+        return_index: bool = False,
+    ):
         # notice that:
         # sub_data_size mean sub-image's width and height.
-        """ basic information """
+        """basic information"""
         self.root = root
         # self.data_size = data_size
         self.return_index = return_index
@@ -27,7 +30,7 @@ class ImageDataset(Dataset):
         #             mean=[0.485, 0.456, 0.406],
         #             std=[0.229, 0.224, 0.225]
         #         )
-        # 
+        #
         # 448:600
         # 384:510
         # 768:
@@ -53,21 +56,21 @@ class ImageDataset(Dataset):
 
         """ read all data information """
         self.data_infos = self.getDataInfo(root)
+        self.transform = transforms.ToTensor()
         # print(self.data_infos)
-
 
     def getDataInfo(self, root):
         data_infos = []
         folders = os.listdir(root)
-        folders.sort() # sort by alphabet
+        folders.sort()  # sort by alphabet
         # print("[dataset] class number:", len(folders))
         eye = np.eye(len(folders), dtype=np.float32)
         for class_id, folder in enumerate(folders):
-            files = os.listdir(root+folder)
+            files = os.listdir(root + folder)
             class_files = root + folder
             for file in files:
-                data_path = class_files+"/"+file
-                data_infos.append({"path":data_path, "label":eye[class_id]})
+                data_path = class_files + "/" + file
+                data_infos.append({"path": data_path, "label": eye[class_id]})
         return data_infos
 
     def __len__(self):
@@ -86,23 +89,21 @@ class ImageDataset(Dataset):
 
         # to PIL.Image
         # img = Image.fromarray(img)
-        img = np.load(image_path).astype(np.float32)
+        img = self.transform(np.load(image_path).astype(np.float32))
         # print(img.shape)
         # print("befortransforms:  ", img.size)
         # img = self.transforms(img)
         # print("after transforms: ", img.shape)
-        
+
         # istrain:  True
         # DEBUG: (354, 500, 3)
         # RGB:   (354, 500, 3)
         # befortransforms:   (500, 354)
         # after transforms:  torch.Size([3, 384, 384])
-        
+
         if self.return_index:
             # return index, img, sub_imgs, label, sub_boundarys
             return index, img, label
-        
+
         # return img, sub_imgs, label, sub_boundarys
         return img, label
-
-
